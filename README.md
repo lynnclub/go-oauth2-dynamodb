@@ -1,13 +1,13 @@
 # DynamoDB Storage for OAuth 2.0
 
-> Based on the https://github.com/go-oauth2/mongo
+> Based on the https://github.com/contamobi/go-oauth2-dynamodb
 
 [![License][License-Image]][License-Url]
 
 ## Install
 
 ``` bash
-$ go get -u github.com/contamobi/go-oauth2-dynamodb
+$ go get -u github.com/lynnclub/go-oauth2-dynamodb
 ```
 
 ## Usage (specifying credentials)
@@ -16,14 +16,14 @@ $ go get -u github.com/contamobi/go-oauth2-dynamodb
 package main
 
 import (
-	"github.com/contamobi/go-oauth2-dynamodb"
-	"github.com/contamobi/go-oauth2/manage"
+	"github.com/lynnclub/go-oauth2-dynamodb"
+	"github.com/go-oauth2/oauth2/v4/manage"
 )
 
 func main() {
 	manager := manage.NewDefaultManager()
 	manager.MustTokenStorage(
-		dynamo.NewTokenStore(dynamo.NewConfig(
+		dynamo.NewTokenStoreV4(dynamo.NewConfig(
 			"us-east-1", // AWS Region
 			"http://localhost:8000", // AWS DynamoDB Endpoint
 			"AKIA*********", // AWS Access Key
@@ -43,14 +43,14 @@ func main() {
 package main
 
 import (
-	"github.com/contamobi/go-oauth2-dynamodb"
-	"github.com/contamobi/go-oauth2/manage"
+	"github.com/lynnclub/go-oauth2-dynamodb"
+	"github.com/go-oauth2/oauth2/v4/manage"
 )
 
 func main() {
 	manager := manage.NewDefaultManager()
 	manager.MustTokenStorage(
-		dynamo.NewTokenStore(dynamo.NewConfig(
+		dynamo.NewTokenStoreV4(dynamo.NewConfig(
 			"us-east-1", // AWS Region
 			"", // Emtpy
 			"", // Emtpy
