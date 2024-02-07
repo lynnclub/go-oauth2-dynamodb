@@ -1,4 +1,4 @@
-module dynamo
+module github.com/lynnclub/go-oauth2-dynamodb
 
 go 1.20
 

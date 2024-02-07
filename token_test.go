@@ -5,7 +5,7 @@ import (
 	"testing"
 	"time"
 
-	"dynamo"
+	dynamo "github.com/lynnclub/go-oauth2-dynamodb"
 
 	"gopkg.in/oauth2.v3/models"
 
