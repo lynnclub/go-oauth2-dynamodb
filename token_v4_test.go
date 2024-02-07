@@ -1,18 +1,20 @@
 package dynamo_test
 
 import (
+	"context"
 	"os"
 	"testing"
 	"time"
 
 	"dynamo"
 
-	"gopkg.in/oauth2.v3/models"
+	"github.com/go-oauth2/oauth2/v4/models"
 
 	. "github.com/smartystreets/goconvey/convey"
 )
 
-func TestTokenStore(t *testing.T) {
+func TestTokenStoreV4(t *testing.T) {
+	ctx := context.Background()
 	Convey("Test dynamodb token store", t, func() {
 		mcfg, err := dynamo.NewConfig(
 			os.Getenv("AWS_REGION"),
@@ -23,7 +25,7 @@ func TestTokenStore(t *testing.T) {
 			"oauth2_access",
 			"oauth2_refresh",
 		)
-		store := dynamo.NewTokenStore(mcfg)
+		store := dynamo.NewTokenStoreV4(mcfg)
 		So(err, ShouldBeNil)
 		Convey("Test authorization code store", func() {
 			info := &models.Token{
@@ -35,17 +37,17 @@ func TestTokenStore(t *testing.T) {
 				CodeCreateAt:  time.Now(),
 				CodeExpiresIn: time.Second * 5,
 			}
-			err := store.Create(info)
+			err := store.Create(ctx, info)
 			So(err, ShouldBeNil)
 
-			cinfo, err := store.GetByCode(info.Code)
+			cinfo, err := store.GetByCode(ctx, info.Code)
 			So(err, ShouldBeNil)
 			So(cinfo.GetUserID(), ShouldEqual, info.UserID)
 
-			err = store.RemoveByCode(info.Code)
+			err = store.RemoveByCode(ctx, info.Code)
 			So(err, ShouldBeNil)
 
-			cinfo, err = store.GetByCode(info.Code)
+			cinfo, err = store.GetByCode(ctx, info.Code)
 			So(err, ShouldBeNil)
 			So(cinfo, ShouldBeNil)
 		})
@@ -60,17 +62,17 @@ func TestTokenStore(t *testing.T) {
 				AccessCreateAt:  time.Now(),
 				AccessExpiresIn: time.Second * 5,
 			}
-			err := store.Create(info)
+			err := store.Create(ctx, info)
 			So(err, ShouldBeNil)
 
-			ainfo, err := store.GetByAccess(info.GetAccess())
+			ainfo, err := store.GetByAccess(ctx, info.GetAccess())
 			So(err, ShouldBeNil)
 			So(ainfo.GetUserID(), ShouldEqual, info.GetUserID())
 
-			err = store.RemoveByAccess(info.GetAccess())
+			err = store.RemoveByAccess(ctx, info.GetAccess())
 			So(err, ShouldBeNil)
 
-			ainfo, err = store.GetByAccess(info.GetAccess())
+			ainfo, err = store.GetByAccess(ctx, info.GetAccess())
 			So(err, ShouldBeNil)
 			So(ainfo, ShouldBeNil)
 		})
@@ -88,17 +90,17 @@ func TestTokenStore(t *testing.T) {
 				RefreshCreateAt:  time.Now(),
 				RefreshExpiresIn: time.Second * 15,
 			}
-			err := store.Create(info)
+			err := store.Create(ctx, info)
 			So(err, ShouldBeNil)
 
-			rinfo, err := store.GetByRefresh(info.GetRefresh())
+			rinfo, err := store.GetByRefresh(ctx, info.GetRefresh())
 			So(err, ShouldBeNil)
 			So(rinfo.GetUserID(), ShouldEqual, info.GetUserID())
 
-			err = store.RemoveByRefresh(info.GetRefresh())
+			err = store.RemoveByRefresh(ctx, info.GetRefresh())
 			So(err, ShouldBeNil)
 
-			rinfo, err = store.GetByRefresh(info.GetRefresh())
+			rinfo, err = store.GetByRefresh(ctx, info.GetRefresh())
 			So(err, ShouldBeNil)
 			So(rinfo, ShouldBeNil)
 		})
